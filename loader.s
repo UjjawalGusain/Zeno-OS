@@ -1,34 +1,21 @@
-.set MAGIC, 0x1badb002
-.set FLAGS, (1<<0 | 1<<1)
-.set CHECKSUM, -(MAGIC + FLAGS)
+MAGIC_NUMBER equ 0x1BADB002           ; need this in multiboot section to let GRUB know this is kernel
+FLAGS equ 0x0                         ; multiboot flags
+CHECKSUM equ -(MAGIC_NUMBER + FLAGS)  ; calculating checksum -> checksum + MAGIC + FLAGS = 0
 
-.section .multiboot
-    .long MAGIC
-    .long FLAGS
-    .long CHECKSUM
+section .multiboot:
+align 4                               ; we need to align all labels to addresses divisible by 4
+    dd MAGIC_NUMBER                   ; we want GRUB to know that this is multiboot loader, and for that it needs MAGIC NUMBER
+    dd FLAGS
+    dd CHECKSUM
 
-.section .text
-.extern kernelMain
-.global loader
 
+section .text
+global loader                         ; entry symbol for ELF. Makes loader available outside the file
 loader:
-    mov kernel_stack, %esp
+    mov eax, 0xCAFEBABE               ; AX register is loaded with this
 
-    #The bootloader(GRUB) stores the pointer to multiboot struct in AX register(it has info like size of your RAM)
-    push %eax 
+.loop:
+    jmp .loop                         ; loop forever
 
-    #The bootloader(GRUB) stores the MAGIC number in BX register
-    push %ebx
 
-    call kernelMain
-
-_stop:
-    cli
-    hlt
-    jmp _stop
-
-.section .bss
-.space 2 * 1024 * 1024 #2MB
-kernel_stack:
-new_var:
 
