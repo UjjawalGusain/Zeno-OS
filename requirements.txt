@@ -1,5 +1,0 @@
-# This requirements.txt is just for the developer and not actually for intended use
-# just do "sudo apt-get <package-name>"
-g++
-bunutil
-libc6-dev-i386
