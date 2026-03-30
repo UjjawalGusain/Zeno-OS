@@ -1,15 +1,3 @@
 # Zeno OS
 
-### Creating ISO Image:
-'''
-genisoimage -R \
--b boot/grub/stage2_eltorito \
--no-emul-boot \
--boot-load-size 4 \
--A os \
--input-charset utf8 \
--quiet \
--boot-info-table \
--o os.iso \
-iso
-'''
+Zeno OS is an implementation of Operating System based on the book "The little book about OS Development". The implementations are primarily based on C language, with a bit of Assembly language where it is required.
